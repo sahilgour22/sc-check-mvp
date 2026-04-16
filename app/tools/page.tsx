@@ -58,7 +58,9 @@ function MergeTool() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   function addFiles(newFiles: FileList) {
-    const pdfs = Array.from(newFiles).filter((f) => f.name.endsWith('.pdf'))
+    const arr = Array.from(newFiles)
+    const pdfs = arr.filter((f) => f.name.endsWith('.pdf') && f.size <= 4.5 * 1024 * 1024)
+    if (pdfs.length < arr.length) setError('Some files exceeded the 4.5MB Vercel limit and were skipped.')
     setFiles((prev) => [...prev, ...pdfs])
     setDownloadUrl(null)
   }
@@ -84,7 +86,12 @@ function MergeTool() {
       const fd = new FormData()
       files.forEach((f) => fd.append('files', f))
       const res = await fetch('/api/tools/merge', { method: 'POST', body: fd })
-      if (!res.ok) throw new Error((await res.json()).error)
+      if (!res.ok) {
+        if (res.status === 413) throw new Error('Files too large (Vercel limit 4.5MB).')
+        const text = await res.text()
+        try { throw new Error(JSON.parse(text).error || 'Merge failed') }
+        catch { throw new Error(`Merge failed (${res.status}): ${text.slice(0, 40)}`) }
+      }
       const data = await res.json()
       setDownloadUrl(data.downloadUrl)
     } catch (e: unknown) {
@@ -159,11 +166,18 @@ function ReorderTool() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   async function uploadFile(file: File) {
+    if (file.size > 4.5 * 1024 * 1024) { alert('File exceeds 4.5MB Vercel limit.'); return; }
     setUploading(true)
     const fd = new FormData()
     fd.append('file', file)
     try {
       const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      if (!res.ok) {
+        if (res.status === 413) throw new Error('File too large (Vercel limit 4.5MB).')
+        const text = await res.text()
+        try { throw new Error(JSON.parse(text).error || 'Upload failed') }
+        catch { throw new Error(`Upload failed (${res.status})`) }
+      }
       const data = await res.json()
       setSessionId(data.sessionId)
       // Create a default order of 50 pages max
@@ -273,11 +287,18 @@ function RedactTool() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   async function uploadFile(file: File) {
+    if (file.size > 4.5 * 1024 * 1024) { alert('File exceeds 4.5MB Vercel limit.'); return; }
     setUploading(true)
     const fd = new FormData()
     fd.append('file', file)
     try {
       const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      if (!res.ok) {
+        if (res.status === 413) throw new Error('File too large.')
+        const text = await res.text()
+        try { throw new Error(JSON.parse(text).error || 'Upload failed') }
+        catch { throw new Error(`Upload failed (${res.status})`) }
+      }
       const data = await res.json()
       setSessionId(data.sessionId)
     } catch { /* ignore */ }

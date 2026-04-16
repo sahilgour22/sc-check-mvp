@@ -51,8 +51,8 @@ function ValidatePageInner() {
       setError('Only PDF files are accepted.')
       return
     }
-    if (f.size > 200 * 1024 * 1024) {
-      setError('File exceeds 200MB limit.')
+    if (f.size > 4.5 * 1024 * 1024) {
+      setError('File exceeds 4.5MB Vercel limit. Please compress PDF for this MVP mode.')
       return
     }
     setError(null)
@@ -86,8 +86,14 @@ function ValidatePageInner() {
     try {
       const res = await fetch('/api/upload', { method: 'POST', body: formData })
       if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error || 'Upload failed')
+        if (res.status === 413) throw new Error('File too large (Vercel limit 4.5MB).')
+        const text = await res.text()
+        try {
+          const err = JSON.parse(text)
+          throw new Error(err.error || 'Upload failed')
+        } catch {
+          throw new Error(`Upload failed (${res.status}): ${text.slice(0, 40)}`)
+        }
       }
       const data = await res.json()
       sid = data.sessionId
@@ -170,7 +176,7 @@ function ValidatePageInner() {
           <h1 className="font-display text-3xl sm:text-4xl font-semibold mb-2" style={{ color: '#f5f0e8' }}>
             Upload Filing
           </h1>
-          <p className="text-sm opacity-50">Drop your petition PDF (up to 200MB, 1000 pages supported)</p>
+          <p className="text-sm opacity-50">Drop your petition PDF (up to 4.5MB Vercel Limit)</p>
         </div>
 
         {/* Drop zone */}
@@ -224,7 +230,7 @@ function ValidatePageInner() {
                     {isDragging ? 'Drop your PDF here' : 'Drag & drop your petition PDF'}
                   </div>
                   <div className="text-sm opacity-40 mb-4">or click to browse</div>
-                  <div className="text-xs font-mono opacity-30">PDF only · Max 200MB · 1000 pages supported</div>
+                  <div className="text-xs font-mono opacity-30">PDF only · Max 4.5MB · Hosted on Vercel</div>
                 </div>
               )}
             </div>
