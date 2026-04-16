@@ -1,0 +1,523 @@
+{
+  "meta": {
+    "source": "Supreme Court Rules, 2013 (GSR 368(E), dated 27th May 2014, as amended)",
+    "last_updated": "2025",
+    "version": "2.0.0",
+    "description": "Comprehensive knowledge base for all Supreme Court of India filing types"
+  },
+
+  "courts": {
+    "supreme_court": {
+      "name": "Supreme Court of India",
+      "rules_reference": "Supreme Court Rules, 2013",
+      "filing_counter_hours": "10:00 AM to 5:00 PM (no work after 4:30 PM)",
+
+      "case_types": {
+
+        "slp_civil": {
+          "name": "Special Leave Petition (Civil)",
+          "full_name": "Special Leave Petition under Article 136 of the Constitution of India",
+          "order_reference": "Order XXI, Supreme Court Rules 2013",
+          "form_number": "Form No. 28",
+          "jurisdiction": "Civil Appellate",
+          "limitation": {
+            "from_refusal_of_certificate": "60 days from date of order of refusal",
+            "from_judgment_order": "90 days from date of judgment or order",
+            "rule_reference": "Order XXI, Rule 1"
+          },
+          "court_fee": {
+            "at_institution": 1500,
+            "currency": "INR",
+            "special_categories_fee": 5000,
+            "note": "Higher fee (Rs.5000) for tax/company/arbitration/banking/IP matters (Part IV of Third Schedule)",
+            "fee_type": "Court Fee Stamp (Delhi only)"
+          },
+          "sensitive_case_checks": false,
+          "document_order": [
+            "List of Dates (chronological)",
+            "Certified copy of impugned judgment/order",
+            "Special Leave Petition in Form No. 28 (with affidavit)",
+            "Appendix containing relevant provisions",
+            "Annexures (individually indexed with page numbers)"
+          ],
+          "format_requirements": {
+            "paper_size": "A4 (29.7cm x 21cm) or demy-foolscap",
+            "spacing": "Double-line spacing",
+            "printing": "One side of paper only",
+            "language": "English (non-English must be translated)",
+            "page_numbering": "Required",
+            "rule_reference": "Order VIII Rule 1"
+          },
+          "validation_checklist": [
+            { "check_id": "V001", "category": "Court Fee", "description": "Court fee stamp of Rs.1500 (or Rs.5000 for special subject categories) must be affixed", "severity": "MANDATORY", "rule": "Order VIII Rule 8, Third Schedule Part II" },
+            { "check_id": "V002", "category": "Form", "description": "Petition must be in prescribed Form No. 28", "severity": "MANDATORY", "rule": "Order XXI Rule 3(1)(a)" },
+            { "check_id": "V003", "category": "Document Order", "description": "Papers in prescribed order: List of Dates → Certified Copy → SLP Form 28 → Appendix → Annexures", "severity": "MANDATORY", "rule": "Order XXI Rule 3(1)(f)" },
+            { "check_id": "V004", "category": "Certified Copy", "description": "Certified copy of impugned judgment must be attached", "severity": "MANDATORY", "rule": "Order XXI Rule 4(i)" },
+            { "check_id": "V005", "category": "Affidavit", "description": "Affidavit in support of statement of facts must be attached", "severity": "MANDATORY", "rule": "Order XXI Rule 4(ii) and Order IX" },
+            { "check_id": "V006", "category": "Vakalatnama", "description": "Vakalatnama duly executed and certified by AOR", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "V007", "category": "List of Dates", "description": "Chronological list of dates must appear first in paper book", "severity": "MANDATORY", "rule": "Order XXI Rule 3(1)(b)" },
+            { "check_id": "V008", "category": "Prior Petition Statement", "description": "Statement whether any prior SLP against same order was filed, with affidavit", "severity": "MANDATORY", "rule": "Order XXI Rule 3(2)" },
+            { "check_id": "V009", "category": "Letters Patent Statement", "description": "Statement on availability and status of Letters Patent/Writ Appeal", "severity": "MANDATORY", "rule": "Order XXI Rule 3(5)" },
+            { "check_id": "V010", "category": "Format", "description": "A4/demy-foolscap paper, double-line spacing, one side only", "severity": "MANDATORY", "rule": "Order VIII Rule 1" },
+            { "check_id": "V011", "category": "Appendix", "description": "Appendix with English text of relevant constitutional/statutory provisions", "severity": "MANDATORY", "rule": "Order XXI Rule 3(1)(d)(iii) and 3(1)(f)(iv)" },
+            { "check_id": "V012", "category": "Annexures", "description": "Annexures individually indexed with page numbers; certified or affirmed copies", "severity": "MANDATORY_IF_PRESENT", "rule": "Order XXI Rules 3(1)(d)(i) and 5" },
+            { "check_id": "V013", "category": "Spare Copies", "description": "1 spare set at initial filing; 3+ sets with declaration on re-filing", "severity": "MANDATORY", "rule": "Order XXI Rule 6 (amended 2019)" },
+            { "check_id": "V015", "category": "Limitation", "description": "If beyond 60/90 days, application for condonation of delay required", "severity": "MANDATORY_IF_DELAYED", "rule": "Order XXI Rule 1 and Order V Rule 1(11)" },
+            { "check_id": "V016", "category": "Translation", "description": "All non-English documents must have certified English translation", "severity": "MANDATORY_IF_PRESENT", "rule": "Order VIII Rules 2-4" },
+            { "check_id": "V_PAGENO", "category": "Page Numbering", "description": "All pages must carry sequential page numbers", "severity": "MANDATORY", "rule": "SC Registry Practice Direction" }
+          ]
+        },
+
+        "slp_criminal": {
+          "name": "Special Leave Petition (Criminal)",
+          "full_name": "Special Leave Petition (Criminal) under Article 136",
+          "order_reference": "Order XXII, Supreme Court Rules 2013",
+          "jurisdiction": "Criminal Appellate",
+          "limitation": {
+            "from_refusal_of_certificate": "60 days from date of order of refusal",
+            "from_judgment_order": "90 days from date of judgment or order",
+            "note": "Different provisions for death sentence matters"
+          },
+          "court_fee": {
+            "at_institution": 0,
+            "note": "Criminal proceedings: NO court fee required",
+            "rule_reference": "Order XX Rule 20"
+          },
+          "sensitive_case_checks": true,
+          "document_order": [
+            "List of Dates",
+            "Certified copy of impugned judgment/order",
+            "SLP with affidavit",
+            "Appendix (if applicable)",
+            "Annexures"
+          ],
+          "key_notes": [
+            "No court fee payable in criminal proceedings",
+            "If accused in jail: surrender certificate from jail authorities required",
+            "Vakalatnama must be filed from jail if accused is in custody",
+            "For POCSO/rape cases: victim name MUST be redacted throughout"
+          ],
+          "validation_checklist": [
+            { "check_id": "VC001", "category": "Court Fee", "description": "Criminal proceedings: No court fee required", "severity": "INFO", "rule": "Order XX Rule 20" },
+            { "check_id": "VC002", "category": "Certified Copy", "description": "Certified copy of impugned judgment/conviction order must be attached", "severity": "MANDATORY", "rule": "Order XXII Rule 2" },
+            { "check_id": "VC003", "category": "Affidavit", "description": "Affidavit in support verifying facts must be filed", "severity": "MANDATORY", "rule": "Order XXII Rule 2 and Order IX" },
+            { "check_id": "VC004", "category": "Vakalatnama", "description": "Vakalatnama by AOR; if accused in jail, filed through jail authorities", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "VC005", "category": "List of Dates", "description": "Chronological list of dates including arrest, trial, conviction dates", "severity": "MANDATORY", "rule": "Order XXII Rule 2" },
+            { "check_id": "VC006", "category": "Jail Surrender Certificate", "description": "If accused in custody: surrender certificate from Superintendent of Jail required", "severity": "MANDATORY_IF_CUSTODY", "rule": "SC Registry Practice" },
+            { "check_id": "VC007", "category": "Prior Petition Statement", "description": "Statement whether any prior petition against same order was filed", "severity": "MANDATORY", "rule": "Order XXII Rule 2" },
+            { "check_id": "VC008", "category": "Format", "description": "A4 paper, double spacing, one side only", "severity": "MANDATORY", "rule": "Order VIII Rule 1" },
+            { "check_id": "VC009", "category": "Victim Identity — CRITICAL", "description": "In POCSO/rape/sexual offence cases: victim name and identity MUST be redacted throughout ALL documents", "severity": "MANDATORY_FOR_SENSITIVE", "rule": "Section 228A IPC · SC Guidelines 2018" },
+            { "check_id": "VC010", "category": "Translation", "description": "Non-English documents (FIR, charge sheet, judgment) must have certified translation", "severity": "MANDATORY_IF_PRESENT", "rule": "Order VIII Rules 2-4" },
+            { "check_id": "VC011", "category": "Limitation", "description": "If beyond 90 days from order, condonation of delay application required", "severity": "MANDATORY_IF_DELAYED", "rule": "Order XXII Rule 1" }
+          ]
+        },
+
+        "writ_article32": {
+          "name": "Writ Petition (Article 32)",
+          "full_name": "Writ Petition for enforcement of Fundamental Rights under Article 32",
+          "order_reference": "Order XXXV, Supreme Court Rules 2013",
+          "jurisdiction": "Original — Fundamental Rights",
+          "limitation": {
+            "note": "No statutory limitation period, but laches doctrine applies",
+            "general": "File at earliest opportunity; delay must be explained"
+          },
+          "court_fee": {
+            "general": 500,
+            "habeas_corpus": 0,
+            "note": "No fee for Habeas Corpus or criminal proceedings",
+            "rule_reference": "Third Schedule Part I S.No.5"
+          },
+          "sensitive_case_checks": false,
+          "validation_checklist": [
+            { "check_id": "VW001", "category": "Court Fee", "description": "Court fee of Rs.500 for Writ Petition (except Habeas Corpus and criminal)", "severity": "MANDATORY", "rule": "Third Schedule Part I, S.No.5" },
+            { "check_id": "VW002", "category": "Fundamental Right Invocation", "description": "Specific fundamental right(s) under Part III of Constitution must be invoked", "severity": "MANDATORY", "rule": "Article 32, Constitution of India" },
+            { "check_id": "VW003", "category": "Prayer/Relief", "description": "Specific writ sought (mandamus/certiorari/prohibition/quo warranto/habeas corpus) must be stated", "severity": "MANDATORY", "rule": "Order XXXV Rule 1" },
+            { "check_id": "VW004", "category": "Affidavit", "description": "Affidavit verifying facts of the petition", "severity": "MANDATORY", "rule": "Order IX and Order XXXV Rule 1" },
+            { "check_id": "VW005", "category": "Vakalatnama", "description": "Vakalatnama by AOR", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "VW006", "category": "Locus Standi", "description": "Petitioner must show standing — personal violation of fundamental right or PIL grounds", "severity": "MANDATORY", "rule": "Article 32, Constitution of India" },
+            { "check_id": "VW007", "category": "State Action", "description": "Writ must lie against State/instrumentality of State under Article 12", "severity": "MANDATORY", "rule": "Article 12, Constitution of India" },
+            { "check_id": "VW008", "category": "Exhaustion of Remedy", "description": "Statement on whether alternative remedies (High Court writ) were availed", "severity": "MANDATORY", "rule": "SC Practice Direction" },
+            { "check_id": "VW009", "category": "Format", "description": "A4 paper, double spacing, one side only", "severity": "MANDATORY", "rule": "Order VIII Rule 1" },
+            { "check_id": "VW010", "category": "List of Dates", "description": "Chronological list of material dates", "severity": "MANDATORY", "rule": "Order XXXV Rule 1" }
+          ]
+        },
+
+        "writ_habeas_corpus": {
+          "name": "Habeas Corpus Petition",
+          "full_name": "Writ of Habeas Corpus under Article 32",
+          "jurisdiction": "Original — Personal Liberty",
+          "limitation": {
+            "note": "No limitation period — urgent matter of personal liberty"
+          },
+          "court_fee": {
+            "at_institution": 0,
+            "note": "NO court fee for Habeas Corpus",
+            "rule_reference": "Third Schedule Part I"
+          },
+          "sensitive_case_checks": false,
+          "validation_checklist": [
+            { "check_id": "VHC001", "category": "Court Fee", "description": "Habeas Corpus: No court fee required", "severity": "INFO", "rule": "Third Schedule Part I" },
+            { "check_id": "VHC002", "category": "Detention Details", "description": "Name, date of arrest/detention, place of detention, authority must be stated", "severity": "MANDATORY", "rule": "SC Practice — Habeas Corpus" },
+            { "check_id": "VHC003", "category": "Legal Authority for Detention", "description": "Specific law/order under which detained must be stated", "severity": "MANDATORY", "rule": "Article 22, Constitution of India" },
+            { "check_id": "VHC004", "category": "Affidavit", "description": "Affidavit by detainee or close relative verifying facts", "severity": "MANDATORY", "rule": "Order IX" },
+            { "check_id": "VHC005", "category": "Vakalatnama", "description": "Vakalatnama by AOR; if detainee cannot sign, relative can give authority", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "VHC006", "category": "Grounds of Illegality", "description": "Specific grounds challenging legality of detention must be stated", "severity": "MANDATORY", "rule": "Article 32, Constitution of India" }
+          ]
+        },
+
+        "appeal_civil": {
+          "name": "Civil Appeal",
+          "full_name": "Civil Appeal before the Supreme Court",
+          "order_reference": "Order XIX, Supreme Court Rules 2013",
+          "jurisdiction": "Civil Appellate",
+          "limitation": {
+            "general": "As per Limitation Act 1963 — 90 days from date of judgment (certificate cases)",
+            "rule_reference": "Order XIX, Rule 2"
+          },
+          "court_fee": {
+            "at_institution": 1500,
+            "note": "Court fee stamp required",
+            "rule_reference": "Third Schedule"
+          },
+          "sensitive_case_checks": false,
+          "validation_checklist": [
+            { "check_id": "VCA001", "category": "Court Fee", "description": "Court fee stamp of Rs.1500 must be affixed", "severity": "MANDATORY", "rule": "Third Schedule" },
+            { "check_id": "VCA002", "category": "Certificate of Leave", "description": "Certificate of leave from High Court (Article 133/134A) or SLP converted to appeal", "severity": "MANDATORY", "rule": "Article 133/134A, Constitution and Order XIX Rule 1" },
+            { "check_id": "VCA003", "category": "Certified Copy", "description": "Certified copy of impugned judgment and decree must be filed", "severity": "MANDATORY", "rule": "Order XIX Rule 1(2)" },
+            { "check_id": "VCA004", "category": "Affidavit", "description": "Affidavit in support of appeal", "severity": "MANDATORY", "rule": "Order IX" },
+            { "check_id": "VCA005", "category": "Vakalatnama", "description": "Vakalatnama by AOR", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "VCA006", "category": "List of Dates", "description": "Chronological list of dates", "severity": "MANDATORY", "rule": "Order XIX" },
+            { "check_id": "VCA007", "category": "Grounds of Appeal", "description": "Specific grounds of appeal, questions of law must be clearly stated", "severity": "MANDATORY", "rule": "Order XIX Rule 2" },
+            { "check_id": "VCA008", "category": "Format", "description": "A4 paper, double spacing, one side only", "severity": "MANDATORY", "rule": "Order VIII Rule 1" },
+            { "check_id": "VCA009", "category": "Limitation", "description": "Appeal must be within limitation or condonation application required", "severity": "MANDATORY_IF_DELAYED", "rule": "Order XIX Rule 2 and Limitation Act" }
+          ]
+        },
+
+        "appeal_criminal": {
+          "name": "Criminal Appeal",
+          "full_name": "Criminal Appeal before the Supreme Court",
+          "order_reference": "Order XXII, Supreme Court Rules 2013",
+          "jurisdiction": "Criminal Appellate",
+          "limitation": {
+            "general": "60 days from date of judgment",
+            "death_sentence": "No limitation for death sentence appeals",
+            "rule_reference": "Order XXII"
+          },
+          "court_fee": {
+            "at_institution": 0,
+            "note": "No court fee in criminal matters",
+            "rule_reference": "Order XX Rule 20"
+          },
+          "sensitive_case_checks": true,
+          "validation_checklist": [
+            { "check_id": "VCR001", "category": "Court Fee", "description": "Criminal Appeal: No court fee required", "severity": "INFO", "rule": "Order XX Rule 20" },
+            { "check_id": "VCR002", "category": "Certified Copy", "description": "Certified copy of conviction judgment and sentence order must be filed", "severity": "MANDATORY", "rule": "Order XXII Rule 2" },
+            { "check_id": "VCR003", "category": "Affidavit", "description": "Affidavit verifying facts of appeal", "severity": "MANDATORY", "rule": "Order IX" },
+            { "check_id": "VCR004", "category": "Vakalatnama", "description": "Vakalatnama by AOR; surrender certificate if accused in jail", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "VCR005", "category": "Grounds of Appeal", "description": "Specific grounds challenging conviction/sentence must be stated", "severity": "MANDATORY", "rule": "Order XXII" },
+            { "check_id": "VCR006", "category": "Victim Identity — CRITICAL", "description": "In rape/POCSO/sexual offence cases: victim name must be redacted throughout", "severity": "MANDATORY_FOR_SENSITIVE", "rule": "Section 228A IPC · SC Guidelines 2018" },
+            { "check_id": "VCR007", "category": "Bail/Surrender Status", "description": "Current bail or surrender status of accused must be stated", "severity": "MANDATORY", "rule": "SC Registry Practice" },
+            { "check_id": "VCR008", "category": "Format", "description": "A4 paper, double spacing, one side only", "severity": "MANDATORY", "rule": "Order VIII Rule 1" }
+          ]
+        },
+
+        "transfer_civil": {
+          "name": "Transfer Petition (Civil)",
+          "full_name": "Transfer Petition (Civil) under Section 25 CPC",
+          "order_reference": "Order XXXIX, Supreme Court Rules 2013",
+          "jurisdiction": "Transfer Jurisdiction",
+          "limitation": {
+            "note": "No specific limitation, but file at earliest; laches may be considered"
+          },
+          "court_fee": {
+            "at_institution": 500,
+            "note": "Court fee stamp required",
+            "rule_reference": "Third Schedule"
+          },
+          "sensitive_case_checks": false,
+          "validation_checklist": [
+            { "check_id": "VTP001", "category": "Court Fee", "description": "Court fee of Rs.500 for Transfer Petition (Civil)", "severity": "MANDATORY", "rule": "Third Schedule" },
+            { "check_id": "VTP002", "category": "Grounds for Transfer", "description": "Specific grounds for transfer must be stated — apprehension of prejudice, convenience of parties, common question of law", "severity": "MANDATORY", "rule": "Section 25 CPC and Order XXXIX" },
+            { "check_id": "VTP003", "category": "Details of Pending Cases", "description": "Details of case(s) pending transfer — court, case number, stage — must be provided", "severity": "MANDATORY", "rule": "Order XXXIX Rule 1" },
+            { "check_id": "VTP004", "category": "Affidavit", "description": "Affidavit verifying facts of petition", "severity": "MANDATORY", "rule": "Order IX" },
+            { "check_id": "VTP005", "category": "Vakalatnama", "description": "Vakalatnama by AOR", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "VTP006", "category": "Notice to Parties", "description": "Statement whether notice has been given to other parties in pending cases", "severity": "MANDATORY", "rule": "Order XXXIX Rule 2" },
+            { "check_id": "VTP007", "category": "Format", "description": "A4 paper, double spacing, one side only", "severity": "MANDATORY", "rule": "Order VIII Rule 1" }
+          ]
+        },
+
+        "transfer_criminal": {
+          "name": "Transfer Petition (Criminal)",
+          "full_name": "Transfer Petition (Criminal) under Section 406 CrPC / Section 447 BNSS",
+          "order_reference": "Order XXXIX, Supreme Court Rules 2013",
+          "jurisdiction": "Transfer Jurisdiction — Criminal",
+          "limitation": {
+            "note": "No statutory limitation; file promptly"
+          },
+          "court_fee": {
+            "at_institution": 0,
+            "note": "No court fee in criminal matters",
+            "rule_reference": "Order XX Rule 20"
+          },
+          "sensitive_case_checks": true,
+          "validation_checklist": [
+            { "check_id": "VTPC001", "category": "Court Fee", "description": "Criminal Transfer Petition: No court fee required", "severity": "INFO", "rule": "Order XX Rule 20" },
+            { "check_id": "VTPC002", "category": "Grounds for Transfer", "description": "Specific grounds: safety of witnesses, fair trial apprehension, convenience, common question must be stated", "severity": "MANDATORY", "rule": "Section 406 CrPC / Section 447 BNSS and Order XXXIX" },
+            { "check_id": "VTPC003", "category": "Pending Case Details", "description": "Details of criminal case(s) pending transfer — court, FIR/case number, sections, stage", "severity": "MANDATORY", "rule": "Order XXXIX Rule 1" },
+            { "check_id": "VTPC004", "category": "Affidavit", "description": "Affidavit verifying facts", "severity": "MANDATORY", "rule": "Order IX" },
+            { "check_id": "VTPC005", "category": "Vakalatnama", "description": "Vakalatnama by AOR", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "VTPC006", "category": "Victim Identity — CRITICAL", "description": "In POCSO/rape/sexual offence cases: victim identity must be redacted throughout", "severity": "MANDATORY_FOR_SENSITIVE", "rule": "Section 228A IPC · SC Guidelines 2018" },
+            { "check_id": "VTPC007", "category": "Format", "description": "A4 paper, double spacing, one side only", "severity": "MANDATORY", "rule": "Order VIII Rule 1" }
+          ]
+        },
+
+        "contempt_civil": {
+          "name": "Contempt Petition (Civil)",
+          "full_name": "Contempt Petition for Civil Contempt of Supreme Court's order",
+          "order_reference": "Order XLVII, Supreme Court Rules 2013 and Contempt of Courts Act 1971",
+          "jurisdiction": "Original — Contempt",
+          "limitation": {
+            "general": "Within 1 year from date of alleged contempt",
+            "rule_reference": "Section 20, Contempt of Courts Act 1971"
+          },
+          "court_fee": {
+            "at_institution": 500,
+            "note": "Court fee for contempt petition",
+            "rule_reference": "Third Schedule"
+          },
+          "sensitive_case_checks": false,
+          "validation_checklist": [
+            { "check_id": "VCP001", "category": "Court Fee", "description": "Court fee of Rs.500 required for Contempt Petition", "severity": "MANDATORY", "rule": "Third Schedule" },
+            { "check_id": "VCP002", "category": "SC Order Annexed", "description": "Certified copy of SC order allegedly violated must be annexed", "severity": "MANDATORY", "rule": "Order XLVII Rule 1" },
+            { "check_id": "VCP003", "category": "Particulars of Contempt", "description": "Specific acts/omissions constituting contempt must be described with dates", "severity": "MANDATORY", "rule": "Contempt of Courts Act 1971 Section 2(b)" },
+            { "check_id": "VCP004", "category": "Affidavit", "description": "Affidavit verifying acts of contempt", "severity": "MANDATORY", "rule": "Order IX and Order XLVII" },
+            { "check_id": "VCP005", "category": "Vakalatnama", "description": "Vakalatnama by AOR", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "VCP006", "category": "Contemptors Named", "description": "Full names and designation of alleged contemnors must be stated", "severity": "MANDATORY", "rule": "Order XLVII Rule 1" },
+            { "check_id": "VCP007", "category": "Limitation — 1 Year", "description": "Contempt petition must be within 1 year from date of alleged contemptuous act", "severity": "MANDATORY", "rule": "Section 20, Contempt of Courts Act 1971" },
+            { "check_id": "VCP008", "category": "Format", "description": "A4 paper, double spacing, one side only", "severity": "MANDATORY", "rule": "Order VIII Rule 1" }
+          ]
+        },
+
+        "contempt_criminal": {
+          "name": "Contempt Petition (Criminal)",
+          "full_name": "Contempt Petition for Criminal Contempt of Court",
+          "order_reference": "Order XLVII, Supreme Court Rules 2013 and Contempt of Courts Act 1971",
+          "jurisdiction": "Original — Criminal Contempt",
+          "limitation": {
+            "general": "Within 1 year from date of alleged contempt",
+            "rule_reference": "Section 20, Contempt of Courts Act 1971"
+          },
+          "court_fee": {
+            "at_institution": 0,
+            "note": "No court fee for criminal contempt",
+            "rule_reference": "Order XX Rule 20"
+          },
+          "sensitive_case_checks": false,
+          "validation_checklist": [
+            { "check_id": "VCCP001", "category": "Court Fee", "description": "Criminal Contempt: No court fee", "severity": "INFO", "rule": "Order XX Rule 20" },
+            { "check_id": "VCCP002", "category": "Particulars of Criminal Contempt", "description": "Specific acts scandalising court, prejudicing judicial proceedings, or obstruction of justice must be described", "severity": "MANDATORY", "rule": "Section 2(c), Contempt of Courts Act 1971" },
+            { "check_id": "VCCP003", "category": "Evidence of Contempt", "description": "Copies of publications, statements, videos, or other evidence of contempt must be annexed", "severity": "MANDATORY", "rule": "Order XLVII Rule 1" },
+            { "check_id": "VCCP004", "category": "Affidavit", "description": "Affidavit verifying facts of contempt", "severity": "MANDATORY", "rule": "Order IX" },
+            { "check_id": "VCCP005", "category": "Vakalatnama", "description": "Vakalatnama by AOR", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "VCCP006", "category": "AG Consent", "description": "Consent of Attorney General of India required to initiate criminal contempt (unless court takes suo motu)", "severity": "MANDATORY", "rule": "Section 15, Contempt of Courts Act 1971" },
+            { "check_id": "VCCP007", "category": "Format", "description": "A4 paper, double spacing, one side only", "severity": "MANDATORY", "rule": "Order VIII Rule 1" }
+          ]
+        },
+
+        "review_petition": {
+          "name": "Review Petition",
+          "full_name": "Petition for Review of Judgment/Order of the Supreme Court",
+          "order_reference": "Order XLVII, Supreme Court Rules 2013 and Article 137",
+          "jurisdiction": "Review — Same Bench",
+          "limitation": {
+            "general": "30 days from date of judgment/order sought to be reviewed",
+            "rule_reference": "Order XLVII Rule 1 and Article 137"
+          },
+          "court_fee": {
+            "at_institution": 200,
+            "note": "Court fee for Review Petition",
+            "rule_reference": "Third Schedule"
+          },
+          "sensitive_case_checks": false,
+          "validation_checklist": [
+            { "check_id": "VRP001", "category": "Court Fee", "description": "Court fee of Rs.200 required for Review Petition", "severity": "MANDATORY", "rule": "Third Schedule" },
+            { "check_id": "VRP002", "category": "Grounds for Review", "description": "Grounds of review under Order XLVII Rule 1 CPC — error apparent on face of record, discovery of new matter, any other sufficient reason — must be specifically stated", "severity": "MANDATORY", "rule": "Order XLVII Rule 1 CPC and Article 137" },
+            { "check_id": "VRP003", "category": "SC Judgment Annexed", "description": "Certified copy of SC judgment/order sought to be reviewed must be annexed", "severity": "MANDATORY", "rule": "Order XLVII Rule 1" },
+            { "check_id": "VRP004", "category": "Affidavit", "description": "Affidavit verifying grounds for review", "severity": "MANDATORY", "rule": "Order IX" },
+            { "check_id": "VRP005", "category": "Vakalatnama", "description": "Vakalatnama by AOR", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "VRP006", "category": "Limitation — 30 Days", "description": "Review petition must be within 30 days from date of SC judgment; if delayed, condonation required", "severity": "MANDATORY", "rule": "Order XLVII Rule 1" },
+            { "check_id": "VRP007", "category": "No New Grounds", "description": "Review cannot raise fresh grounds not argued in original hearing — verify grounds are review-worthy", "severity": "MANDATORY", "rule": "Article 137 and Order XLVII" },
+            { "check_id": "VRP008", "category": "Format", "description": "A4 paper, double spacing, one side only", "severity": "MANDATORY", "rule": "Order VIII Rule 1" }
+          ]
+        },
+
+        "curative_petition": {
+          "name": "Curative Petition",
+          "full_name": "Curative Petition before the Supreme Court",
+          "order_reference": "Rupa Ashok Hurra v. Ashok Hurra (2002) 4 SCC 388",
+          "jurisdiction": "Curative — Post-Review",
+          "limitation": {
+            "note": "Only after review petition dismissed or after review jurisdiction exhausted"
+          },
+          "court_fee": {
+            "at_institution": 200,
+            "note": "Court fee applicable",
+            "rule_reference": "Third Schedule"
+          },
+          "sensitive_case_checks": false,
+          "validation_checklist": [
+            { "check_id": "VCU001", "category": "Court Fee", "description": "Court fee required for Curative Petition", "severity": "MANDATORY", "rule": "Third Schedule" },
+            { "check_id": "VCU002", "category": "Review Exhausted", "description": "Must state that review petition was filed and dismissed; curative only lies after review dismissed", "severity": "MANDATORY", "rule": "Rupa Ashok Hurra v. Ashok Hurra (2002) 4 SCC 388" },
+            { "check_id": "VCU003", "category": "Grounds for Curative", "description": "Grounds must show: (i) violation of principles of natural justice, or (ii) judge with bias participated — very high threshold", "severity": "MANDATORY", "rule": "Rupa Ashok Hurra (2002) 4 SCC 388" },
+            { "check_id": "VCU004", "category": "Senior Advocate Certification", "description": "Petition must be certified by a Senior Advocate that grounds are made out", "severity": "MANDATORY", "rule": "Rupa Ashok Hurra (2002) 4 SCC 388" },
+            { "check_id": "VCU005", "category": "SC Judgment + Review Order Annexed", "description": "Both original SC judgment AND review dismissal order must be annexed", "severity": "MANDATORY", "rule": "Rupa Ashok Hurra practice" },
+            { "check_id": "VCU006", "category": "Affidavit", "description": "Affidavit verifying facts and grounds", "severity": "MANDATORY", "rule": "Order IX" },
+            { "check_id": "VCU007", "category": "Vakalatnama", "description": "Vakalatnama by AOR", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "VCU008", "category": "Format", "description": "A4 paper, double spacing, one side only", "severity": "MANDATORY", "rule": "Order VIII Rule 1" }
+          ]
+        },
+
+        "pil": {
+          "name": "PIL — Public Interest Litigation",
+          "full_name": "Writ Petition (Public Interest Litigation) under Article 32",
+          "order_reference": "Order XXXV, Supreme Court Rules 2013 and PIL Guidelines",
+          "jurisdiction": "Original — Public Interest",
+          "limitation": {
+            "note": "No statutory limitation; must not be inordinately delayed"
+          },
+          "court_fee": {
+            "at_institution": 500,
+            "note": "Rs.500 court fee (may be waived in genuine PIL)",
+            "rule_reference": "Third Schedule Part I"
+          },
+          "sensitive_case_checks": false,
+          "validation_checklist": [
+            { "check_id": "VPIL001", "category": "Court Fee", "description": "Court fee of Rs.500 (unless fee waiver sought in PIL)", "severity": "MANDATORY", "rule": "Third Schedule Part I" },
+            { "check_id": "VPIL002", "category": "Public Interest Grounds", "description": "Must establish genuine public interest — not private dispute or publicity stunt", "severity": "MANDATORY", "rule": "PIL Guidelines — SC" },
+            { "check_id": "VPIL003", "category": "Fundamental Rights Invocation", "description": "Specific fundamental rights (often Articles 14, 19, 21) being violated must be identified", "severity": "MANDATORY", "rule": "Article 32, Constitution of India" },
+            { "check_id": "VPIL004", "category": "Petitioner Locus", "description": "Petitioner acting bona fide in public interest; no personal gain or vendetta", "severity": "MANDATORY", "rule": "PIL Guidelines — SC" },
+            { "check_id": "VPIL005", "category": "Respondent State", "description": "Union of India/State and concerned Ministry/Department must be proper respondents", "severity": "MANDATORY", "rule": "Order XXXV Rule 1" },
+            { "check_id": "VPIL006", "category": "Affidavit", "description": "Affidavit verifying facts and affirming bona fide public interest motivation", "severity": "MANDATORY", "rule": "Order IX" },
+            { "check_id": "VPIL007", "category": "Vakalatnama", "description": "Vakalatnama by AOR", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "VPIL008", "category": "Specific Prayer", "description": "PIL must have specific, enforceable prayer — not vague directions", "severity": "MANDATORY", "rule": "SC PIL Guidelines" },
+            { "check_id": "VPIL009", "category": "Supporting Material", "description": "Documentary evidence, reports, RTI responses supporting the public interest claim should be annexed", "severity": "MANDATORY", "rule": "SC PIL Practice" },
+            { "check_id": "VPIL010", "category": "Format", "description": "A4 paper, double spacing, one side only", "severity": "MANDATORY", "rule": "Order VIII Rule 1" }
+          ]
+        },
+
+        "election_petition": {
+          "name": "Election Petition",
+          "full_name": "Election Petition under Representation of the People Act, 1951",
+          "order_reference": "Order LX, Supreme Court Rules 2013",
+          "jurisdiction": "Original — Election",
+          "limitation": {
+            "general": "45 days from date of election of returned candidate (Presidential/VP elections only before SC)",
+            "rule_reference": "Sections 80, 81 — Representation of the People Act 1951"
+          },
+          "court_fee": {
+            "at_institution": 2000,
+            "note": "Deposit of security for costs required",
+            "rule_reference": "Section 117 RPA 1951"
+          },
+          "sensitive_case_checks": false,
+          "validation_checklist": [
+            { "check_id": "VEP001", "category": "Court Fee", "description": "Security deposit of Rs.2000 required for Election Petition before SC", "severity": "MANDATORY", "rule": "Section 117, RPA 1951" },
+            { "check_id": "VEP002", "category": "Jurisdiction", "description": "SC has original jurisdiction only for Presidential and VP election petitions", "severity": "MANDATORY", "rule": "Article 71, Constitution and Section 14 RPA 1951" },
+            { "check_id": "VEP003", "category": "Limitation — 45 Days", "description": "Election petition must be filed within 45 days of election of returned candidate", "severity": "MANDATORY", "rule": "Section 81, RPA 1951" },
+            { "check_id": "VEP004", "category": "Grounds", "description": "Specific corrupt practices or violations of RPA 1951 must be stated with particulars", "severity": "MANDATORY", "rule": "Sections 100-101, RPA 1951" },
+            { "check_id": "VEP005", "category": "Affidavit", "description": "Affidavit verifying allegations of corrupt practice in prescribed form", "severity": "MANDATORY", "rule": "Section 83, RPA 1951" },
+            { "check_id": "VEP006", "category": "Vakalatnama", "description": "Vakalatnama by AOR", "severity": "MANDATORY", "rule": "Order IV Rule 7" },
+            { "check_id": "VEP007", "category": "Format", "description": "A4 paper, double spacing, one side only", "severity": "MANDATORY", "rule": "Order VIII Rule 1" }
+          ]
+        }
+      }
+    }
+  },
+
+  "general_filing_rules": {
+    "document_format": {
+      "paper_size": ["A4 (29.7cm x 21cm)", "Demy-foolscap"],
+      "spacing": "Double-line spacing",
+      "side": "One side only",
+      "legibility": "Fairly and legibly written, type-written or lithographed",
+      "language": "English (non-English must be translated)",
+      "rule_reference": "Order VIII Rule 1"
+    },
+    "filing_counter": {
+      "hours": "10:00 AM to 5:00 PM",
+      "last_acceptance": "4:30 PM",
+      "days": "Except vacation, Saturdays, and holidays",
+      "rule_reference": "Order II Rule 1"
+    },
+    "defective_documents": {
+      "process": "Document placed before Registrar after notice to party",
+      "formal_defect": "Registrar may allow rectification in his presence",
+      "other_defect": "Party must get order from Court; time allowed up to 28 days aggregate",
+      "failure_to_rectify": "Registrar may decline to register",
+      "appeal": "Aggrieved party may appeal to Judge in Chambers within 15 days",
+      "rule_reference": "Order VIII Rule 6(3)-(5)"
+    },
+    "court_fees": {
+      "payment_mode": "Court fee stamp sold in Delhi ONLY",
+      "cancellation": "Officer receiving document must cancel stamp by punching figure-head",
+      "deficiency": "Registrar can allow making good deficiency within max 3 months",
+      "rule_reference": "Order VIII Rules 8-9"
+    },
+    "affidavits": {
+      "format": "First person, numbered paragraphs",
+      "knowledge_restriction": "Only facts deponent can prove from own knowledge (belief must be stated)",
+      "no_interlineation": "No uncertified interlineations/alterations/erasures",
+      "court_fee": 20,
+      "rule_reference": "Order IX"
+    },
+    "vakalatnama": {
+      "court_fee": 10,
+      "requirement": "AOR must certify due execution",
+      "restriction": "Cannot authorize another AOR if one already engaged (without proper procedure)",
+      "rule_reference": "Order IV Rules 7, 15"
+    },
+    "translation": {
+      "requirement": "All non-English documents must be translated",
+      "acceptable": ["Translation agreed to by both parties", "Translation certified by Court-appointed translator"],
+      "translator_oath": "Translator must make oath/affirmation of correct and accurate translation",
+      "rule_reference": "Order VIII Rules 2-4"
+    }
+  },
+
+  "sensitive_case_types": {
+    "victim_name_redaction_required": [
+      "Rape (IPC Section 376 and all variants including 376A, 376B, 376C, 376D)",
+      "POCSO (Protection of Children from Sexual Offences Act 2012)",
+      "Sexual assault (IPC Section 354 and variants)",
+      "Sexual harassment (IPC Section 354A)",
+      "Voyeurism (IPC Section 354C)",
+      "Stalking (IPC Section 354D)",
+      "Any offence under BNS 2023 equivalents (Sections 63-73)",
+      "Any offence involving a minor victim (below 18 years)"
+    ],
+    "redaction_replacement_options": ["Victim", "Prosecutrix", "Minor Victim", "Child Victim"],
+    "legal_basis": "Section 228A IPC / Section 72 BNS 2023 · Supreme Court Guidelines 2018 · POCSO Act 2012",
+    "additional_suppressions": [
+      "Father's/Mother's name of victim",
+      "Address of victim",
+      "School/workplace of victim",
+      "Any identifying details of victim"
+    ]
+  },
+
+  "subject_categories_higher_fee": {
+    "description": "SLP Civil matters in these categories attract Rs.5000 court fee (Part IV of Third Schedule)",
+    "categories": [
+      "Direct Tax Matters (Income Tax, Wealth Tax, Gift Tax)",
+      "Indirect Tax Matters (Customs, Excise, Service Tax, GST)",
+      "Company Law Matters",
+      "Arbitration Matters",
+      "Banking and Financial Matters",
+      "Insurance Matters",
+      "Intellectual Property (Patents, Trademarks, Copyright)",
+      "Monopolies and Restrictive Trade Practices",
+      "Foreign Exchange Matters (FEMA)",
+      "Competition Law"
+    ]
+  }
+}
