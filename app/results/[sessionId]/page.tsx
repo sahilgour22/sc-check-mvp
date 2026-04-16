@@ -32,14 +32,12 @@ function ResultsPageInner({ sessionId }: { sessionId: string }) {
   useEffect(() => {
     async function loadReport() {
       try {
-        const res = await fetch('/api/validate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sessionId }),
-        })
-        if (!res.ok) throw new Error('Report not found')
-        const data: ValidationReport = await res.json()
-        setReport(data)
+        const stored = localStorage.getItem(`validation_report_${sessionId}`)
+        if (stored) {
+          setReport(JSON.parse(stored))
+        } else {
+          throw new Error('Report not found in local browser session. Please re-validate the document.')
+        }
       } catch (e: unknown) {
         setError(e instanceof Error ? e.message : 'Failed to load report')
       } finally {

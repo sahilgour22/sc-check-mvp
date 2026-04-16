@@ -51,8 +51,10 @@ function ValidatePageInner() {
       setError('Only PDF files are accepted.')
       return
     }
-    if (f.size > 4.5 * 1024 * 1024) {
-      setError('File exceeds 4.5MB Vercel limit. Please compress PDF for this MVP mode.')
+    const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost'
+    const maxSize = isLocal ? 200 * 1024 * 1024 : 4.5 * 1024 * 1024
+    if (f.size > maxSize) {
+      setError(`File exceeds ${isLocal ? '200MB' : '4.5MB Vercel'} limit. Please compress PDF.`)
       return
     }
     setError(null)
@@ -79,74 +81,68 @@ function ValidatePageInner() {
     setCurrentMsg('Uploading PDF to secure session...')
     setProgress(5)
 
+    setValidating(true)
+    const sid = crypto.randomUUID()
+    setSessionId(sid)
+
     const formData = new FormData()
     formData.append('file', file)
+    formData.append('caseType', caseType)
+    formData.append('sessionId', sid)
 
-    let sid: string
     try {
-      const res = await fetch('/api/upload', { method: 'POST', body: formData })
-      if (!res.ok) {
-        if (res.status === 413) throw new Error('File too large (Vercel limit 4.5MB).')
-        const text = await res.text()
-        try {
-          const err = JSON.parse(text)
-          throw new Error(err.error || 'Upload failed')
-        } catch {
-          throw new Error(`Upload failed (${res.status}): ${text.slice(0, 40)}`)
+      const res = await fetch('/api/validate', { method: 'POST', body: formData })
+      if (!res.ok || !res.body) throw new Error('Failed to connect to validation server')
+
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n\n')
+        buffer = lines.pop() || ''
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6))
+
+              if (data.progress !== undefined) setProgress(data.progress)
+              if (data.step) setCurrentStep(data.step)
+              if (data.message) setCurrentMsg(data.message)
+              if (data.pageCount) setPageCount(data.pageCount)
+              if (data.isScanned !== undefined) setIsScanned(data.isScanned)
+
+              if (data.error) {
+                setError(data.error)
+                setValidating(false)
+                return
+              }
+
+              if (data.done) {
+                // Save to local storage for results page
+                localStorage.setItem(`validation_report_${sid}`, JSON.stringify(data.report))
+                setValidating(false)
+                setProgress(100)
+                setCurrentMsg('Validation complete — redirecting to report...')
+                setTimeout(() => {
+                  router.push(`/results/${sid}?caseType=${caseType}`)
+                }, 800)
+              }
+            } catch { /* ignore parse errors per chunk */ }
+          }
         }
       }
-      const data = await res.json()
-      sid = data.sessionId
-      setSessionId(sid)
-      setProgress(18)
-      setCurrentMsg(`Uploaded ${data.fileSizeMB} MB — starting validation...`)
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Upload failed')
+    } finally {
       setUploading(false)
-      return
-    }
-
-    setUploading(false)
-    setValidating(true)
-
-    // Step 2+: SSE streaming validation
-    const url = `/api/validate?sessionId=${sid}&caseType=${caseType}`
-    const evtSource = new EventSource(url)
-
-    evtSource.onmessage = (e) => {
-      try {
-        const data = JSON.parse(e.data)
-
-        if (data.progress !== undefined) setProgress(data.progress)
-        if (data.step) setCurrentStep(data.step)
-        if (data.message) setCurrentMsg(data.message)
-        if (data.pageCount) setPageCount(data.pageCount)
-        if (data.isScanned !== undefined) setIsScanned(data.isScanned)
-
-        if (data.error) {
-          setError(data.error)
-          evtSource.close()
-          setValidating(false)
-          return
-        }
-
-        if (data.done) {
-          evtSource.close()
-          setValidating(false)
-          setProgress(100)
-          setCurrentMsg('Validation complete — redirecting to report...')
-          setTimeout(() => {
-            router.push(`/results/${sid}?caseType=${caseType}`)
-          }, 800)
-        }
-      } catch { /* ignore parse errors */ }
-    }
-
-    evtSource.onerror = () => {
-      evtSource.close()
-      setValidating(false)
-      if (progress < 95) {
-        setError('Connection lost during validation. Please try again.')
+      if (progress < 95 && validating) {
+         setValidating(false)
       }
     }
   }
@@ -176,7 +172,7 @@ function ValidatePageInner() {
           <h1 className="font-display text-3xl sm:text-4xl font-semibold mb-2" style={{ color: '#f5f0e8' }}>
             Upload Filing
           </h1>
-          <p className="text-sm opacity-50">Drop your petition PDF (up to 4.5MB Vercel Limit)</p>
+          <p className="text-sm opacity-50">Drop your petition PDF (up to 4.5MB Vercel, 200MB Local)</p>
         </div>
 
         {/* Drop zone */}
@@ -230,7 +226,7 @@ function ValidatePageInner() {
                     {isDragging ? 'Drop your PDF here' : 'Drag & drop your petition PDF'}
                   </div>
                   <div className="text-sm opacity-40 mb-4">or click to browse</div>
-                  <div className="text-xs font-mono opacity-30">PDF only · Max 4.5MB · Hosted on Vercel</div>
+                  <div className="text-xs font-mono opacity-30">PDF only · Check size limits</div>
                 </div>
               )}
             </div>
