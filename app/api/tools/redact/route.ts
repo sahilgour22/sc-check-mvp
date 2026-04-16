@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     const redactedBytes = await doc.save()
 
-    return new NextResponse(redactedBytes, {
+    return new NextResponse(Buffer.from(redactedBytes), {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename="redacted.pdf"'

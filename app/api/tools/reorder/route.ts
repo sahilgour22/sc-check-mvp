@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
     const reordered = await reorderPages(filePath, newOrder)
 
-    return new NextResponse(reordered, {
+    return new NextResponse(Buffer.from(reordered), {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename="reordered.pdf"'

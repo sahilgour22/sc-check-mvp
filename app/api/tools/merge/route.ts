@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
     const merged = await mergePDFs(filePaths)
     
-    return new NextResponse(merged, {
+    return new NextResponse(Buffer.from(merged), {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename="merged.pdf"'
