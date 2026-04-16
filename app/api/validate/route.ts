@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import path from 'path'
 import fs from 'fs/promises'
+import os from 'os'
 import { extractPDF } from '@/lib/pdf/extractor'
 import { runValidation } from '@/lib/validator/orchestrator'
 
@@ -25,7 +26,7 @@ export async function GET(req: NextRequest) {
     return new Response('Invalid sessionId', { status: 400 })
   }
 
-  const sessionDir = path.join(process.cwd(), 'uploads', sessionId)
+  const sessionDir = path.join(os.tmpdir(), 'uploads', sessionId)
   const filePath = path.join(sessionDir, 'original.pdf')
 
   try {
@@ -126,7 +127,7 @@ export async function POST(req: NextRequest) {
     return new Response('Invalid sessionId', { status: 400 })
   }
 
-  const reportPath = path.join(process.cwd(), 'uploads', sessionId, 'report.json')
+  const reportPath = path.join(os.tmpdir(), 'uploads', sessionId, 'report.json')
 
   try {
     const data = await fs.readFile(reportPath, 'utf-8')

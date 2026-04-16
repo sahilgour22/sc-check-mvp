@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 import fs from 'fs/promises'
+import os from 'os'
 import { PDFDocument, rgb } from 'pdf-lib'
 
 export async function POST(req: NextRequest) {
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No names to redact provided' }, { status: 400 })
     }
 
-    const filePath = path.join(process.cwd(), 'uploads', sessionId, 'original.pdf')
+    const filePath = path.join(os.tmpdir(), 'uploads', sessionId, 'original.pdf')
 
     try {
       await fs.access(filePath)
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest) {
     }
 
     const redactedBytes = await doc.save()
-    const outPath = path.join(process.cwd(), 'uploads', sessionId, 'redacted.pdf')
+    const outPath = path.join(os.tmpdir(), 'uploads', sessionId, 'redacted.pdf')
     await fs.writeFile(outPath, redactedBytes)
 
     return NextResponse.json({

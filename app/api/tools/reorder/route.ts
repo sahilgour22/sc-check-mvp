@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 import fs from 'fs/promises'
+import os from 'os'
 import { reorderPages } from '@/lib/pdf/manipulator'
 
 export async function POST(req: NextRequest) {
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'newOrder array required' }, { status: 400 })
     }
 
-    const filePath = path.join(process.cwd(), 'uploads', sessionId, 'original.pdf')
+    const filePath = path.join(os.tmpdir(), 'uploads', sessionId, 'original.pdf')
 
     try {
       await fs.access(filePath)
@@ -25,7 +26,7 @@ export async function POST(req: NextRequest) {
     }
 
     const reordered = await reorderPages(filePath, newOrder)
-    const outPath = path.join(process.cwd(), 'uploads', sessionId, 'reordered.pdf')
+    const outPath = path.join(os.tmpdir(), 'uploads', sessionId, 'reordered.pdf')
     await fs.writeFile(outPath, reordered)
 
     return NextResponse.json({

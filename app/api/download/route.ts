@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 import fs from 'fs/promises'
+import os from 'os'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -17,7 +18,7 @@ export async function GET(req: NextRequest) {
     return new NextResponse('Invalid file', { status: 400 })
   }
 
-  const filePath = path.join(process.cwd(), 'uploads', sessionId, file)
+  const filePath = path.join(os.tmpdir(), 'uploads', sessionId, file)
 
   try {
     const bytes = await fs.readFile(filePath)

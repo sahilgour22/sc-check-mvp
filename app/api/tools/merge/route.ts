@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { v4 as uuidv4 } from 'uuid'
 import path from 'path'
 import fs from 'fs/promises'
+import os from 'os'
 import { mergePDFs } from '@/lib/pdf/manipulator'
 
 export async function POST(req: NextRequest) {
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
     }
 
     const sessionId = uuidv4()
-    const tmpDir = path.join(process.cwd(), 'uploads', sessionId)
+    const tmpDir = path.join(os.tmpdir(), 'uploads', sessionId)
     await fs.mkdir(tmpDir, { recursive: true })
 
     // Save uploaded files

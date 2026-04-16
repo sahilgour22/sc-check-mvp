@@ -3,8 +3,9 @@ import { v4 as uuidv4 } from 'uuid'
 import path from 'path'
 import fs from 'fs/promises'
 import { existsSync } from 'fs'
+import os from 'os'
 
-const UPLOAD_DIR = path.join(process.cwd(), 'uploads')
+const UPLOAD_DIR = path.join(os.tmpdir(), 'uploads')
 const MAX_SIZE_BYTES = 200 * 1024 * 1024 // 200MB
 
 export const config = {
