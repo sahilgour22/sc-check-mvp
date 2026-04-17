@@ -1,15 +1,5 @@
 'use client'
-import { useState, useRef } from 'react'
-import { PDFDocument } from 'pdf-lib'
-
-function ScalesIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="miter">
-      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-      <path d="M22 22L2 22" />
-    </svg>
-  )
-}
+import { useState, useRef, useCallback } from 'react'
 
 export default function ToolsPage() {
   const [activeTab, setActiveTab] = useState<'merge' | 'reorder' | 'redact'>('merge')
@@ -28,7 +18,7 @@ export default function ToolsPage() {
       <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-12">
         <div className="fade-up fade-up-0 mb-8">
           <h1 className="font-display text-3xl sm:text-4xl font-semibold mb-2" style={{ color: '#f5f0e8' }}>PDF Tools</h1>
-          <p className="text-sm opacity-50">Merge, reorder, and redact your filing documents seamlessly.</p>
+          <p className="text-sm opacity-50">Merge, reorder, and redact your filing documents</p>
         </div>
 
         {/* Tab bar */}
@@ -68,12 +58,7 @@ function MergeTool() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   function addFiles(newFiles: FileList) {
-    const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-    const maxSize = isLocal ? 200 * 1024 * 1024 : 4.5 * 1024 * 1024
-    
-    const arr = Array.from(newFiles)
-    const pdfs = arr.filter((f) => f.name.endsWith('.pdf') && f.size <= maxSize)
-    if (pdfs.length < arr.length) setError(`Some files exceeded the ${isLocal ? '200MB' : '4.5MB'} limit and were skipped.`)
+    const pdfs = Array.from(newFiles).filter((f) => f.name.endsWith('.pdf'))
     setFiles((prev) => [...prev, ...pdfs])
     setDownloadUrl(null)
   }
@@ -99,14 +84,9 @@ function MergeTool() {
       const fd = new FormData()
       files.forEach((f) => fd.append('files', f))
       const res = await fetch('/api/tools/merge', { method: 'POST', body: fd })
-      
-      if (!res.ok) {
-        if (res.status === 413) throw new Error('Files too large (Vercel limit 4.5MB).')
-        throw new Error('Merge failed.')
-      }
-
-      const blob = await res.blob()
-      setDownloadUrl(URL.createObjectURL(blob))
+      if (!res.ok) throw new Error((await res.json()).error)
+      const data = await res.json()
+      setDownloadUrl(data.downloadUrl)
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Merge failed')
     } finally {
@@ -170,30 +150,28 @@ function MergeTool() {
 }
 
 function ReorderTool() {
-  const [file, setFile] = useState<File | null>(null)
+  const [sessionId, setSessionId] = useState<string | null>(null)
   const [pageCount, setPageCount] = useState(0)
   const [order, setOrder] = useState<number[]>([])
   const [loading, setLoading] = useState(false)
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  async function uploadFile(f: File) {
-    const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-    const maxSize = isLocal ? 200 * 1024 * 1024 : 4.5 * 1024 * 1024
-    if (f.size > maxSize) { alert(`File exceeds ${isLocal ? '200' : '4.5'}MB limit.`); return; }
-    
-    setLoading(true)
+  async function uploadFile(file: File) {
+    setUploading(true)
+    const fd = new FormData()
+    fd.append('file', file)
     try {
-      const bytes = await f.arrayBuffer()
-      const doc = await PDFDocument.load(bytes, { ignoreEncryption: true })
-      const count = doc.getPageCount()
+      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      const data = await res.json()
+      setSessionId(data.sessionId)
+      // Create a default order of 50 pages max
+      const count = Math.min(data.pageCount || 50, 200)
       setPageCount(count)
       setOrder(Array.from({ length: count }, (_, i) => i))
-      setFile(f)
-    } catch {
-      alert("Failed to read PDF")
-    }
-    setLoading(false)
+    } catch { /* ignore */ }
+    setUploading(false)
   }
 
   function moveSection(i: number, dir: -1 | 1) {
@@ -205,34 +183,32 @@ function ReorderTool() {
   }
 
   async function save() {
-    if (!file) return
+    if (!sessionId) return
     setLoading(true)
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      fd.append('newOrder', JSON.stringify(order))
-      const res = await fetch('/api/tools/reorder', { method: 'POST', body: fd })
-      if (!res.ok) throw new Error('Reorder failed.')
-      const blob = await res.blob()
-      setDownloadUrl(URL.createObjectURL(blob))
-    } catch { 
-      alert("Failed to reorder")
-    }
+      const res = await fetch('/api/tools/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, newOrder: order }),
+      })
+      const data = await res.json()
+      setDownloadUrl(data.downloadUrl)
+    } catch { /* ignore */ }
     setLoading(false)
   }
 
-  if (!file) {
+  if (!sessionId) {
     return (
       <div className="glass-card rounded-2xl p-6">
         <h2 className="font-display text-2xl mb-1" style={{ color: '#f5f0e8' }}>Reorder Document Sections</h2>
         <p className="text-sm opacity-50 mb-6">Upload your PDF and rearrange pages to match the prescribed filing order.</p>
         <input ref={inputRef} type="file" accept=".pdf" className="hidden"
           onChange={(e) => e.target.files?.[0] && uploadFile(e.target.files[0])} />
-        <button onClick={() => inputRef.current?.click()} disabled={loading}
-          className="w-full rounded-xl p-8 text-center cursor-pointer transition-all disabled:opacity-50"
+        <button onClick={() => inputRef.current?.click()}
+          className="w-full rounded-xl p-8 text-center cursor-pointer transition-all"
           style={{ border: '2px dashed rgba(201,162,39,0.25)', background: 'rgba(10,22,40,0.5)' }}>
           <div className="text-3xl mb-2 opacity-50">⇅</div>
-          <div className="text-sm opacity-50">{loading ? 'Reading PDF...' : 'Click to select PDF file'}</div>
+          <div className="text-sm opacity-50">{uploading ? 'Uploading...' : 'Click to upload PDF'}</div>
         </button>
         <div className="mt-5 p-4 rounded-xl text-sm opacity-50"
           style={{ background: 'rgba(201,162,39,0.04)', border: '1px solid rgba(201,162,39,0.1)' }}>
@@ -255,7 +231,7 @@ function ReorderTool() {
       <p className="text-sm opacity-50 mb-6">Drag pages to reorder. Showing page indices for {pageCount} pages.</p>
 
       <div className="max-h-96 overflow-y-auto space-y-1.5 mb-5 pr-1">
-        {order.slice(0, 100).map((pageIdx, i) => (
+        {order.slice(0, 50).map((pageIdx, i) => (
           <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg"
             style={{ background: 'rgba(201,162,39,0.04)', border: '1px solid rgba(201,162,39,0.1)' }}>
             <span className="font-mono text-xs w-6 opacity-40">{i + 1}</span>
@@ -279,7 +255,7 @@ function ReorderTool() {
       ) : (
         <button onClick={save} disabled={loading}
           className="btn-gold rounded-xl py-3 text-sm w-full disabled:opacity-30">
-          {loading ? 'Processing...' : 'Process and Reorder PDF'}
+          {loading ? 'Saving...' : 'Save Reordered PDF'}
         </button>
       )}
     </div>
@@ -287,36 +263,41 @@ function ReorderTool() {
 }
 
 function RedactTool() {
-  const [file, setFile] = useState<File | null>(null)
+  const [sessionId, setSessionId] = useState<string | null>(null)
   const [names, setNames] = useState<string>('')
   const [replaceWith, setReplaceWith] = useState('Victim')
   const [loading, setLoading] = useState(false)
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  async function uploadFile(f: File) {
-    const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-    const maxSize = isLocal ? 200 * 1024 * 1024 : 4.5 * 1024 * 1024
-    if (f.size > maxSize) { alert(`File exceeds ${isLocal ? '200' : '4.5'}MB limit.`); return; }
-    setFile(f)
+  async function uploadFile(file: File) {
+    setUploading(true)
+    const fd = new FormData()
+    fd.append('file', file)
+    try {
+      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      const data = await res.json()
+      setSessionId(data.sessionId)
+    } catch { /* ignore */ }
+    setUploading(false)
   }
 
   async function redact() {
-    if (!file || !names.trim()) return
+    if (!sessionId || !names.trim()) return
     setLoading(true)
     setError(null)
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      fd.append('names', names)
-      fd.append('replaceWith', replaceWith)
-
-      const res = await fetch('/api/tools/redact', { method: 'POST', body: fd })
-      if (!res.ok) throw new Error('Redaction failed')
-      
-      const blob = await res.blob()
-      setDownloadUrl(URL.createObjectURL(blob))
+      const namesToRedact = names.split('\n').map((n) => n.trim()).filter(Boolean)
+      const res = await fetch('/api/tools/redact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, namesToRedact, replaceWith }),
+      })
+      if (!res.ok) throw new Error((await res.json()).error)
+      const data = await res.json()
+      setDownloadUrl(data.downloadUrl)
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Redaction failed')
     } finally {
@@ -335,54 +316,73 @@ function RedactTool() {
         Violation is punishable with imprisonment up to 2 years.
       </div>
 
-      {!file ? (
+      {!sessionId ? (
         <div>
           <input ref={inputRef} type="file" accept=".pdf" className="hidden"
             onChange={(e) => e.target.files?.[0] && uploadFile(e.target.files[0])} />
           <button onClick={() => inputRef.current?.click()}
-            className="w-full rounded-xl p-8 mb-5 transition-all text-center cursor-pointer"
+            className="w-full rounded-xl p-8 text-center cursor-pointer mb-5 transition-all"
             style={{ border: '2px dashed rgba(201,162,39,0.25)', background: 'rgba(10,22,40,0.5)' }}>
             <div className="text-3xl mb-2 opacity-50">█</div>
-            <div className="text-sm opacity-50">Click to select PDF to redact</div>
+            <div className="text-sm opacity-50">{uploading ? 'Uploading...' : 'Upload PDF to redact'}</div>
           </button>
         </div>
       ) : (
-        <div className="mb-6 p-3 rounded-lg flex items-center justify-between"
-          style={{ background: 'rgba(201,162,39,0.05)', border: '1px solid rgba(201,162,39,0.12)' }}>
-          <div>
-            <div className="text-sm truncate max-w-xs">{file.name}</div>
-            <div className="text-xs opacity-40">{(file.size / 1024 / 1024).toFixed(1)} MB</div>
-          </div>
-          <button onClick={() => { setFile(null); setDownloadUrl(null) }} className="text-xs text-red-400">Change</button>
+        <div className="mb-4 text-xs p-2 rounded" style={{ background: 'rgba(22,163,74,0.1)', color: '#22c55e', border: '1px solid rgba(22,163,74,0.2)' }}>
+          ✓ PDF uploaded — Session: {sessionId.slice(0, 8)}…
         </div>
       )}
 
-      {file && !downloadUrl && (
-        <div className="space-y-4 mb-6 fade-up fade-up-1">
-          <div>
-            <label className="block text-sm opacity-70 mb-1.5 flex justify-between">
-              Names to Redact <span className="opacity-40">One per line</span>
-            </label>
-            <textarea
-              value={names} onChange={(e) => setNames(e.target.value)}
-              placeholder="e.g. John Doe&#10;Jane Smith"
-              className="w-full text-sm rounded-lg p-3 outline-none"
-              style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', color: '#f5f0e8', minHeight: '100px' }}
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm opacity-70 mb-1.5 flex justify-between">
-              Replace With <span className="opacity-40">Optional</span>
-            </label>
-            <input
-              type="text" value={replaceWith} onChange={(e) => setReplaceWith(e.target.value)}
-              className="w-full text-sm rounded-lg py-2 px-3 outline-none transition-all"
-              style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', color: '#f5f0e8' }}
-            />
-          </div>
+      <div className="space-y-4 mb-6">
+        <div>
+          <label className="block text-xs font-mono tracking-widest uppercase mb-2 opacity-50">
+            Names to Redact (one per line)
+          </label>
+          <textarea
+            rows={5}
+            value={names}
+            onChange={(e) => setNames(e.target.value)}
+            placeholder="Enter victim's name&#10;Enter father's name&#10;Enter any other identifying name"
+            className="w-full rounded-xl p-3 text-sm resize-none outline-none"
+            style={{
+              background: 'rgba(10,22,40,0.7)',
+              border: '1px solid rgba(201,162,39,0.2)',
+              color: '#f5f0e8',
+            }}
+          />
         </div>
-      )}
+
+        <div>
+          <label className="block text-xs font-mono tracking-widest uppercase mb-2 opacity-50">
+            Replace With
+          </label>
+          <div className="flex gap-2">
+            {['Victim', 'Prosecutrix', 'Minor Victim', 'Custom'].map((opt) => (
+              <button key={opt}
+                onClick={() => setReplaceWith(opt === 'Custom' ? '' : opt)}
+                className="px-3 py-2 rounded-lg text-xs transition-all"
+                style={{
+                  background: replaceWith === opt || (opt === 'Custom' && !['Victim', 'Prosecutrix', 'Minor Victim'].includes(replaceWith))
+                    ? 'rgba(201,162,39,0.15)'
+                    : 'rgba(15,32,64,0.4)',
+                  border: replaceWith === opt ? '1px solid rgba(201,162,39,0.4)' : '1px solid rgba(201,162,39,0.12)',
+                  color: '#ddb94a',
+                }}>
+                {opt}
+              </button>
+            ))}
+          </div>
+          {!['Victim', 'Prosecutrix', 'Minor Victim'].includes(replaceWith) && (
+            <input
+              value={replaceWith}
+              onChange={(e) => setReplaceWith(e.target.value)}
+              placeholder="Enter custom replacement text"
+              className="mt-2 w-full rounded-lg px-3 py-2 text-sm outline-none"
+              style={{ background: 'rgba(10,22,40,0.7)', border: '1px solid rgba(201,162,39,0.2)', color: '#f5f0e8' }}
+            />
+          )}
+        </div>
+      </div>
 
       {error && <div className="text-sm text-red-400 mb-4 px-3 py-2 rounded" style={{ background: 'rgba(192,57,43,0.1)' }}>{error}</div>}
 
@@ -390,12 +390,23 @@ function RedactTool() {
         <a href={downloadUrl} download="redacted.pdf" className="btn-gold rounded-xl py-3 text-sm w-full block text-center">
           Download Redacted PDF ↓
         </a>
-      ) : file ? (
-        <button onClick={redact} disabled={!names.trim() || loading}
+      ) : (
+        <button onClick={redact} disabled={!sessionId || !names.trim() || loading}
           className="btn-gold rounded-xl py-3 text-sm w-full disabled:opacity-30 disabled:cursor-not-allowed">
-          {loading ? 'Applying Redactions...' : 'Redact Document'}
+          {loading ? 'Redacting...' : 'Apply Redactions'}
         </button>
-      ) : null}
+      )}
     </div>
+  )
+}
+
+function ScalesIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ color: '#c9a227' }}>
+      <path d="M12 3v18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M5 9H19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M5 9l-2 6h4L5 9zM19 9l-2 6h4L19 9z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M9 21h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
   )
 }

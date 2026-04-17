@@ -287,7 +287,7 @@ export default function HomePage() {
             ['Case Types', '14'],
             ['Checks', '20+'],
             ['AI Layer', 'Claude Sonnet'],
-            ['File Size', '4.5MB max'],
+            ['File Size', '200MB max'],
             ['Format', 'A4 Only'],
           ].map(([k, v]) => (
             <span key={k}>{k}: <span style={{ color: '#ddb94a' }}>{v}</span></span>

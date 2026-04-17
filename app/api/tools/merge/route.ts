@@ -2,11 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { v4 as uuidv4 } from 'uuid'
 import path from 'path'
 import fs from 'fs/promises'
-import os from 'os'
 import { mergePDFs } from '@/lib/pdf/manipulator'
 
 export async function POST(req: NextRequest) {
-  let tmpDir = ''
   try {
     const formData = await req.formData()
     const files = formData.getAll('files') as File[]
@@ -16,9 +14,10 @@ export async function POST(req: NextRequest) {
     }
 
     const sessionId = uuidv4()
-    tmpDir = path.join(os.tmpdir(), 'uploads', sessionId)
+    const tmpDir = path.join(process.cwd(), 'uploads', sessionId)
     await fs.mkdir(tmpDir, { recursive: true })
 
+    // Save uploaded files
     const filePaths: string[] = []
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
@@ -28,18 +27,22 @@ export async function POST(req: NextRequest) {
       filePaths.push(filePath)
     }
 
+    // Merge
     const merged = await mergePDFs(filePaths)
-    
-    return new NextResponse(Buffer.from(merged), {
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment; filename="merged.pdf"'
-      }
+    const outPath = path.join(tmpDir, 'merged.pdf')
+    await fs.writeFile(outPath, merged)
+
+    // Cleanup inputs
+    for (const fp of filePaths) {
+      await fs.unlink(fp).catch(() => {})
+    }
+
+    return NextResponse.json({
+      downloadUrl: `/api/download?sessionId=${sessionId}&file=merged.pdf`,
+      sessionId,
     })
   } catch (err) {
     console.error('Merge error:', err)
     return NextResponse.json({ error: 'Merge failed' }, { status: 500 })
-  } finally {
-    if (tmpDir) await fs.rm(tmpDir, { recursive: true, force: true }).catch(() => {})
   }
 }
