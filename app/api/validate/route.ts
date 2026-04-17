@@ -68,10 +68,12 @@ export async function GET(req: NextRequest) {
         })
 
         if (pdfData.is_scanned) {
+          const scannedPages = pdfData.scanned_page_count ?? 0
+          const totalPages = pdfData.page_count
           send({
             step: 'extract',
             progress: 22,
-            message: '⚠ Scanned PDF detected — text extraction limited. Some checks may be inaccurate.',
+            message: `⚠ Scanned PDF detected — ${scannedPages} of ${totalPages} pages are image-only (no selectable text). Deterministic checks will be limited and AI analysis may be inaccurate. Ask your typist to provide a digitally-typed PDF, or use a PDF with selectable text exported from MS Word / DTP software.`,
           })
         }
 

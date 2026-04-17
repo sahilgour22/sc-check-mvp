@@ -28,6 +28,7 @@ def extract_pdf(path: str) -> dict:
         "full_text_chunks": [],   # 10k char chunks for AI processing
         "has_images": False,
         "is_scanned": False,
+        "scanned_page_count": 0,  # how many pages have < 100 chars
         "metadata": doc.metadata or {},
         "total_text_chars": 0,
         "error": None
@@ -35,6 +36,8 @@ def extract_pdf(path: str) -> dict:
 
     all_text_parts = []
     chars_per_page = []
+
+    PAGE_TEXT_CAP = 2000  # max chars stored per page to keep JSON size sane
 
     for i, page in enumerate(doc):
         # Page dimensions (in points, 72pts = 1 inch)
@@ -46,32 +49,37 @@ def extract_pdf(path: str) -> dict:
 
         # Extract text
         text = page.get_text("text")
-        chars_per_page.append(len(text.strip()))
+        stripped_len = len(text.strip())
+        chars_per_page.append(stripped_len)
 
-        # First 50 pages: store individually
-        if i < 50:
-            result["text_by_page"].append({
-                "page": i + 1,
-                "text": text
-            })
+        # ALL pages: store individually (capped to keep memory sane)
+        result["text_by_page"].append({
+            "page": i + 1,
+            "text": text[:PAGE_TEXT_CAP] if len(text) > PAGE_TEXT_CAP else text,
+            "truncated": len(text) > PAGE_TEXT_CAP,
+            "char_count": stripped_len
+        })
 
-        # First 5 pages: sample
+        # First 5 pages: full sample (no cap)
         if i < 5:
             result["text_sample"] += f"\n\n--- PAGE {i + 1} ---\n{text}"
 
-        # Last 10 pages
+        # Last 10 pages: full (no cap)
         if i >= total_pages - 10:
             result["last_pages_text"] += f"\n\n--- PAGE {i + 1} ---\n{text}"
 
         all_text_parts.append(text)
 
-    # Check if scanned (< 100 chars per page on average for first 10 pages)
+    # Check if scanned: < 100 chars per page on average for first 10 pages
     first_10_chars = chars_per_page[:min(10, total_pages)]
     avg_chars = sum(first_10_chars) / len(first_10_chars) if first_10_chars else 0
     result["is_scanned"] = avg_chars < 100
 
-    # Full text (from first 50 pages to keep memory sane on 1000-page docs)
-    full_text = "\n".join(all_text_parts[:50])
+    # Count how many individual pages are below 100 chars (blank or image-only)
+    result["scanned_page_count"] = sum(1 for c in chars_per_page if c < 100)
+
+    # Full text from ALL pages (capped per-page, so total stays manageable)
+    full_text = "\n".join(p[:PAGE_TEXT_CAP] for p in all_text_parts)
     result["total_text_chars"] = sum(chars_per_page)
 
     # Split into 10k char chunks for AI processing

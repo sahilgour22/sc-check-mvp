@@ -23,12 +23,13 @@ export interface CheckResult {
 export interface ExtractedPDFData {
   page_count: number
   page_sizes: Array<{ w: number; h: number }>
-  text_by_page: Array<{ page: number; text: string }>
+  text_by_page: Array<{ page: number; text: string; char_count?: number; truncated?: boolean }>
   text_sample: string
   last_pages_text: string
   full_text_chunks: string[]
   has_images: boolean
   is_scanned: boolean
+  scanned_page_count?: number  // pages with < 100 chars (blank or image-only)
   metadata: Record<string, string>
   total_text_chars: number
   error?: string

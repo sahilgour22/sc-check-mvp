@@ -57,8 +57,9 @@ Always cite the exact Order and Rule number (e.g., "Order XXI Rule 3(1)(f)"). Ne
 
 When you find no issue with a particular check, do NOT include it in the semantic_issues array.`
 
-  const textToAnalyse = extractedText.length > 70000
-    ? extractedText.slice(0, 60000) + '\n\n[... middle pages truncated ...]\n\n' + extractedText.slice(-10000)
+  // Feed up to 150k chars to Claude — 120k from the start, 30k from the end
+  const textToAnalyse = extractedText.length > 150000
+    ? extractedText.slice(0, 120000) + '\n\n[... middle pages truncated for token limit ...]\n\n' + extractedText.slice(-30000)
     : extractedText
 
   const caseTypeNames: Record<string, string> = {
